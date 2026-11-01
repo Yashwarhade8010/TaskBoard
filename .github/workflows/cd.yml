@@ -12,14 +12,14 @@ jobs:
   publish:
     runs-on: ubuntu-latest
     steps:
-      - uses: action/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: set image names and tag
         run: |
           echo "PREFIX=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}" >> "$GITHUB_ENV"
           echo "TAG=sha-${GITHUB_SHA::7}" >> "$GITHUB_ENV"
 
-      - uses: docker/login-actions@v3
+      - uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
@@ -35,7 +35,7 @@ jobs:
           tags: |
             ${{ env.PREFIX }}/taskboard-backend:latest
             ${{ env.PREFIX }}/taskboard-backend:${{ env.TAG }}
-          labels: irg.opencontainers.image.source=https://github.com/${{ github.repository }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
 
       - name: build and push frontend
         uses: docker/build-push-action@v6
@@ -44,5 +44,7 @@ jobs:
           push: true
           tags: |
             ${{ env.PREFIX }}/taskboard-frontend:latest
-            ${{ env.PREFIX }}/taskboard-frontedn:${{ env.TAG }}
+            ${{ env.PREFIX }}/taskboard-frontend:${{ env.TAG }}
           labels: irg.opencontainers.image.source=https://github.com/${{ github.repository }}
+
+          
