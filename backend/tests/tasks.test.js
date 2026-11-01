@@ -63,9 +63,4 @@ describe('tasks API', () => {
       .post('/api/tasks').set('Content-Type', 'application/json').send('{bad');
     expect(res.status).toBe(400);
   });
-
-  test('deliberately failing', () => {
-    expect(1).toBe(2);
-  });
-
 });
