@@ -7,7 +7,7 @@ on:
 
 jobs:
   backend:
-    runs-on: ubunu-latest
+    runs-on: ubuntu-latest
     defaults:
       run: 
         working-directory: backend
