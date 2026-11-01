@@ -56,7 +56,7 @@ jobs:
             sleep 3
           done
           curl -fsS -X POST http://localhost:8080/api/tasks \
-             -H '{Contend-Type: application/json}'
+             -H '{Content-Type: application/json}'
              -d '{"title":"ci smoke test"}'
           curl -fsS http://localhost:8080/api/tasks | grep -q "ci smoke test"
 
