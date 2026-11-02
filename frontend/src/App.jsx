@@ -11,14 +11,19 @@ export default function App() {
   const [error, setError] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [status, setStatus] = useState("todo");
   const [editingId, setEditingId] = useState(null);
-  const [draft, setDraft] = useState({ title: '', description: '' });
+  const [draft, setDraft] = useState({ title: "", description: "" });
+
+  const handleStatusChange = (event) => {
+    setStatus(event.target.value);
+  };
 
   const load = useCallback(async () => {
     setLoading(true);
     try {
       setTasks(await listTasks(filter));
-      setError('');
+      setError("");
     } catch (e) {
       setError(e.message);
     } finally {
@@ -26,36 +31,48 @@ export default function App() {
     }
   }, [filter]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    load();
+  }, [load]);
 
   const run = async (fn) => {
-    try { await fn(); setError(''); await load(); } catch (e) { setError(e.message); }
+    try {
+      await fn();
+      setError("");
+      await load();
+    } catch (e) {
+      setError(e.message);
+    }
   };
 
   const onAdd = (e) => {
     e.preventDefault();
     run(async () => {
-      await createTask({ title, description: description || null });
-      setTitle('');
-      setDescription('');
+      await createTask({ title, description: description || null, status });
+      setTitle("");
+      setDescription("");
+      setStatus("Pending");
     });
   };
 
   const startEdit = (t) => {
     setEditingId(t.id);
-    setDraft({ title: t.title, description: t.description || '' });
+    setDraft({ title: t.title, description: t.description || "" });
   };
 
   const saveEdit = (id) =>
     run(async () => {
-      await updateTask(id, { title: draft.title, description: draft.description || null });
+      await updateTask(id, {
+        title: draft.title,
+        description: draft.description || null,
+      });
       setEditingId(null);
     });
 
   return (
     <main className="page">
       <header>
-        <h1>Taskboard edited</h1>
+        <h1>Taskboard</h1>
         <p className="sub">
           Track what needs doing, what's underway, and what's finished.
         </p>
@@ -76,6 +93,14 @@ export default function App() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
+        <div>
+          <label>Status: </label>
+          <select value={status} onChange={handleStatusChange}>
+            <option value="todo">To Do</option>
+            <option value="in_progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
         <button type="submit" className="primary">
           Add task
         </button>
