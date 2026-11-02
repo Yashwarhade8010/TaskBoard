@@ -61,6 +61,13 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         
+      - name: Copy deployment files
+        env:
+          HOST: ${{ secrets.EC2_HOST }}
+        run: |
+          scp -i ~/.ssh/deploy_key docker-compose.prod.yml ubuntu@"$HOST":~/taskboard/docker-compose.yml
+          scp -i ~/.ssh/deploy_key Caddyfile ubunutu@"$HOST":~/taskboard/Caddyfile
+
       - name: Deploy
         env:
           HOST: ${{ secrets.EC2_HOST }}
@@ -70,13 +77,13 @@ jobs:
         
       - name: Smoke test
         env:
-          HOST: ${{ secrets.EC2_HOST }}
+          HOST: ${{ secrets.DOMAIN }}
         run: |
           for i in $(seq 1 20); do
             curl -fsS "http://$HOST/api/tasks" && exit 0
             sleep 3
           done
-          echo "app did not after deploy"
+          echo "App did not respond over HTTPS"
           exit 1
 
 
