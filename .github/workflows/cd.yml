@@ -51,6 +51,7 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - name: Set up SSH
         env:
           SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
@@ -66,7 +67,7 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
         run: |
           scp -i ~/.ssh/deploy_key docker-compose.prod.yml ubuntu@"$HOST":~/taskboard/docker-compose.yml
-          scp -i ~/.ssh/deploy_key Caddyfile ubunutu@"$HOST":~/taskboard/Caddyfile
+          scp -i ~/.ssh/deploy_key Caddyfile ubuntu@"$HOST":~/taskboard/Caddyfile
 
       - name: Deploy
         env:
@@ -77,10 +78,10 @@ jobs:
         
       - name: Smoke test
         env:
-          HOST: ${{ secrets.DOMAIN }}
+          DOMAIN: ${{ secrets.DOMAIN }}
         run: |
           for i in $(seq 1 20); do
-            curl -fsS "http://$HOST/api/tasks" && exit 0
+            curl -fsS "http://$DOMAIN/api/tasks" && exit 0
             sleep 3
           done
           echo "App did not respond over HTTPS"
