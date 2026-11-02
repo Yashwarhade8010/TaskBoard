@@ -57,7 +57,7 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
         run: |
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" >> ~/.ssh/deploy_key
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts
         
@@ -73,7 +73,7 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
         run: |
           for i in $(seq 1 20); do
-            curl fsS "http://$HOST/api/tasks" && exit 0
+            curl -fsS "http://$HOST/api/tasks" && exit 0
             sleep 3
           done
           echo "app did not after deploy"
