@@ -45,7 +45,7 @@ jobs:
           tags: |
             ${{ env.PREFIX }}/taskboard-frontend:latest
             ${{ env.PREFIX }}/taskboard-frontend:${{ env.TAG }}
-          labels: irg.opencontainers.image.source=https://github.com/${{ github.repository }}
+          labels: org.opencontainers.image.source=https://github.com/${{ github.repository }}
  
   deploy:
     needs: publish
@@ -74,7 +74,7 @@ jobs:
           HOST: ${{ secrets.EC2_HOST }}
         run: |
           ssh -i ~/.ssh/deploy_key ubuntu@"$HOST" \
-            "cd ~/taskboard && docker compose pull && docker compose up -d && docker image prune -f"
+            "cd ~/taskboard && docker compose pull && docker compose up -d --remove-orphans && docker image prune -f"
         
       - name: Smoke test
         env:
