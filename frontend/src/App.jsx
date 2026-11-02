@@ -55,8 +55,10 @@ export default function App() {
   return (
     <main className="page">
       <header>
-        <h1>Taskboard</h1>
-        <p className="sub">Track what needs doing, what's underway, and what's finished.</p>
+        <h1>Taskboard edited</h1>
+        <p className="sub">
+          Track what needs doing, what's underway, and what's finished.
+        </p>
       </header>
 
       <form className="add" onSubmit={onAdd}>
@@ -74,14 +76,16 @@ export default function App() {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
-        <button type="submit" className="primary">Add task</button>
+        <button type="submit" className="primary">
+          Add task
+        </button>
       </form>
 
       <nav className="filters" aria-label="Filter tasks">
         {FILTERS.map(([value, label]) => (
           <button
             key={value}
-            className={filter === value ? 'chip active' : 'chip'}
+            className={filter === value ? "chip active" : "chip"}
             aria-pressed={filter === value}
             onClick={() => setFilter(value)}
           >
@@ -90,24 +94,43 @@ export default function App() {
         ))}
       </nav>
 
-      {error && <div role="alert" className="error">{error}</div>}
+      {error && (
+        <div role="alert" className="error">
+          {error}
+        </div>
+      )}
 
       {loading ? (
         <p className="muted">Loading tasks…</p>
       ) : tasks.length === 0 ? (
-        <p className="muted">No tasks here yet. Add one above to get started.</p>
+        <p className="muted">
+          No tasks here yet. Add one above to get started.
+        </p>
       ) : (
         <ul className="list">
           {tasks.map((t) => (
             <li key={t.id} className={`task ${t.status}`}>
               {editingId === t.id ? (
                 <div className="edit">
-                  <input aria-label="Edit title" value={draft.title} maxLength={200}
-                    onChange={(e) => setDraft({ ...draft, title: e.target.value })} />
-                  <input aria-label="Edit details" value={draft.description}
-                    onChange={(e) => setDraft({ ...draft, description: e.target.value })} />
+                  <input
+                    aria-label="Edit title"
+                    value={draft.title}
+                    maxLength={200}
+                    onChange={(e) =>
+                      setDraft({ ...draft, title: e.target.value })
+                    }
+                  />
+                  <input
+                    aria-label="Edit details"
+                    value={draft.description}
+                    onChange={(e) =>
+                      setDraft({ ...draft, description: e.target.value })
+                    }
+                  />
                   <div className="actions">
-                    <button className="primary" onClick={() => saveEdit(t.id)}>Save changes</button>
+                    <button className="primary" onClick={() => saveEdit(t.id)}>
+                      Save changes
+                    </button>
                     <button onClick={() => setEditingId(null)}>Cancel</button>
                   </div>
                 </div>
@@ -115,21 +138,32 @@ export default function App() {
                 <>
                   <div className="body">
                     <strong>{t.title}</strong>
-                    {t.description && <span className="desc">{t.description}</span>}
+                    {t.description && (
+                      <span className="desc">{t.description}</span>
+                    )}
                   </div>
                   <div className="actions">
                     <select
                       aria-label={`Status of ${t.title}`}
                       value={t.status}
-                      onChange={(e) => run(() => updateTask(t.id, { status: e.target.value }))}
+                      onChange={(e) =>
+                        run(() => updateTask(t.id, { status: e.target.value }))
+                      }
                     >
                       {Object.entries(STATUS_LABELS).map(([v, l]) => (
-                        <option key={v} value={v}>{l}</option>
+                        <option key={v} value={v}>
+                          {l}
+                        </option>
                       ))}
                     </select>
                     <button onClick={() => startEdit(t)}>Edit</button>
-                    <button className="danger"
-                      onClick={() => window.confirm(`Delete "${t.title}"?`) && run(() => deleteTask(t.id))}>
+                    <button
+                      className="danger"
+                      onClick={() =>
+                        window.confirm(`Delete "${t.title}"?`) &&
+                        run(() => deleteTask(t.id))
+                      }
+                    >
                       Delete
                     </button>
                   </div>
